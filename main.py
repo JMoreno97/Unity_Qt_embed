@@ -1,5 +1,6 @@
 import sys
 import time
+
 import win32gui
 
 from PySide2.QtCore import Qt, QProcess
@@ -18,9 +19,11 @@ class MainWindow(QMainWindow):
         widget.setLayout(vl)
         self.setCentralWidget(widget)
 
-def winEnumHandler( hwnd, ctx ):
+
+def winEnumHandler(hwnd, ctx):
     if win32gui.IsWindowVisible(hwnd):
-        print (hex(hwnd), win32gui.GetWindowText( hwnd ))
+        print(hex(hwnd), win32gui.GetWindowText(hwnd))
+
 
 if __name__ == '__main__':
     # Create unique QApplication instance
@@ -35,21 +38,23 @@ if __name__ == '__main__':
     unity.setProgram("C:\\Users\\UJA\\Documents\\Unity\\Ejecutable Proyecto GJ (bandera)\\Proyecto GJ.exe")
     unity.start()
     unity.waitForStarted()
-    time.sleep(5)
 
-    #I used this method to print the active windows and see unity's window name.
-    #win32gui.EnumWindows(winEnumHandler, 0)
-    hwnd = win32gui.FindWindow(0, "Proyecto GJ")
+    # I used this method to print the active windows and see unity's window name.
+    # win32gui.EnumWindows(winEnumHandler, 0)
+    hwnd = 0
+    while hwnd == 0:
+        hwnd = win32gui.FindWindow(0, "Proyecto GJ")
 
-    #Get the unity window from the hwnd
+    # Get the unity window from the hwnd
     UnitySceneWindow = QWindow.fromWinId(hwnd)
     # Create the Unity widget that contains the Unity window
     unityWidget = QWidget.createWindowContainer(UnitySceneWindow)
     unityWidget.setFocusPolicy(Qt.TabFocus)
 
-    #Set the the unity widget to the QMainWindow central widget
+
+    # Set the the unity widget to the QMainWindow central widget
     main_window.setCentralWidget(unityWidget)
-    #Show the window
+    # Show the window
     main_window.show()
 
     # Start the event loop.
